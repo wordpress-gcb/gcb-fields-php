@@ -1,0 +1,32 @@
+{
+    "name": "wordpress-gcb/fields",
+    "description": "Turn a GCB block.fields.json controls schema into a WordPress block attribute schema — the PHP companion to @wordpress-gcb/fields, usable without the GCB plugin.",
+    "type": "library",
+    "license": "GPL-2.0-or-later",
+    "version": "0.2.0",
+    "homepage": "https://gutenbergcontrolblocks.com",
+    "keywords": ["wordpress", "gutenberg", "block-editor", "fields", "gcb"],
+    "support": {
+        "issues": "https://github.com/wordpress-gcb/gcb-fields-php/issues",
+        "source": "https://github.com/wordpress-gcb/gcb-fields-php"
+    },
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "GCBFields\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "GCBFields\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+}
