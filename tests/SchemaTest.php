@@ -48,6 +48,34 @@ class SchemaTest extends TestCase {
         $this->assertSame('string',  Schema::attribute_type('unknown-type'));
     }
 
+    public function test_query_loop_default_is_seeded_from_config(): void {
+        // The query config lives on the control (design-time); it must become the
+        // attribute default so render.php receives the query without per-instance
+        // markup repeating it.
+        $attrs = Schema::attributes([
+            [
+                'type' => 'query-loop', 'attributeKey' => 'q', 'label' => 'People',
+                'attributeType' => 'object',
+                'postType' => 'team-member', 'perPage' => 9, 'orderby' => 'title',
+                'order' => 'ASC', 'pagination' => 'numbered',
+                'enableTaxonomyFilter' => true,
+                'filterTaxonomies' => [['slug' => 'department', 'label' => 'Department']],
+            ],
+        ]);
+        $this->assertSame('object', $attrs['q']['type']);
+        $this->assertSame('team-member', $attrs['q']['default']['postType']);
+        $this->assertSame(9, $attrs['q']['default']['perPage']);
+        $this->assertSame('numbered', $attrs['q']['default']['pagination']);
+        $this->assertSame('department', $attrs['q']['default']['filterTaxonomies'][0]['slug']);
+    }
+
+    public function test_query_loop_explicit_default_wins(): void {
+        $attrs = Schema::attributes([
+            ['type' => 'query-loop', 'attributeKey' => 'q', 'postType' => 'x', 'default' => ['postType' => 'override']],
+        ]);
+        $this->assertSame('override', $attrs['q']['default']['postType']);
+    }
+
     public function test_attributeType_override_wins(): void {
         $attrs = Schema::attributes([
             ['type' => 'toggle-group', 'attributeKey' => 'side', 'attributeType' => 'string', 'default' => 'left'],

@@ -46,6 +46,20 @@ class Schema {
             }
 
             $attribute_type = $control['attributeType'] ?? self::attribute_type($control['type'] ?? '');
+
+            // query-loop: the query config (postType, perPage, orderby, order,
+            // pagination, taxonomy filters) is set on the CONTROL at design time,
+            // not entered per-instance in the editor. Fold it into the attribute
+            // default so render.php receives the query even when the block markup
+            // doesn't repeat it.
+            if (($control['type'] ?? '') === 'query-loop') {
+                $default = isset($control['default']) && is_array($control['default'])
+                    ? $control['default']
+                    : self::query_loop_config($control);
+                $attributes[$key] = ['type' => 'object', 'default' => $default];
+                continue;
+            }
+
             $attributes[$key] = [
                 'type'    => $attribute_type,
                 'default' => $control['default'] ?? self::default_value($attribute_type),
@@ -53,6 +67,23 @@ class Schema {
         }
 
         return $attributes;
+    }
+
+    /**
+     * Pull the query-loop config keys off a control into a plain config array,
+     * so it can seed the attribute default. Unknown keys are ignored.
+     *
+     * @param array $control
+     * @return array
+     */
+    public static function query_loop_config(array $control): array {
+        $cfg = [];
+        foreach (['postType', 'perPage', 'orderby', 'order', 'pagination', 'enableTaxonomyFilter', 'filterTaxonomies'] as $k) {
+            if (array_key_exists($k, $control)) {
+                $cfg[$k] = $control[$k];
+            }
+        }
+        return $cfg;
     }
 
     /**
