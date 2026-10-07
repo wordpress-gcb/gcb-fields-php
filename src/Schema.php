@@ -106,13 +106,14 @@ class Schema {
             'gallery'        => 'array',
             'file'           => 'object',
             'post-object'    => 'object',
-            'taxonomy'       => 'array',
+            'taxonomy'       => 'object', // { taxonomy, ids[] } — its docs: "always the canonical shape"
             'user'           => 'object',
             'relationship'   => 'array',
             'icon'           => 'object',
             'url'            => 'object',
             'google-map'     => 'object',
             'heading-level'  => 'object',
+            'heading'        => 'object', // the documented alias of heading-level — { text, level }
             'repeater'       => 'array',
         ];
         return $map[$control_type] ?? 'string';
