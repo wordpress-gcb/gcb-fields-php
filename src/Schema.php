@@ -99,6 +99,9 @@ class Schema {
             'toggle'         => 'boolean',
             'checkbox'       => 'boolean',
             'checkbox-group' => 'array',
+            'button-group'   => 'array',  // multi-select, same shape as checkbox-group (its docs: "array of strings")
+            'page-link'      => 'object', // { url, text, opensInNewTab } — "same as `url`"
+            'query-loop'     => 'object', // attributes() always typed it object; the map now agrees
             'image'          => 'object',
             'gallery'        => 'array',
             'file'           => 'object',

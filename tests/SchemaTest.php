@@ -48,6 +48,19 @@ class SchemaTest extends TestCase {
         $this->assertSame('string',  Schema::attribute_type('unknown-type'));
     }
 
+    /** The three the map used to leave as string, against their own docs (2026-10-07). */
+    public function test_multi_select_and_link_controls_store_what_their_docs_say(): void {
+        $this->assertSame('array', Schema::attribute_type('button-group'));
+        $this->assertSame('object', Schema::attribute_type('page-link'));
+        $this->assertSame('object', Schema::attribute_type('query-loop'));
+        $attrs = Schema::attributes([
+            ['id' => 'a', 'type' => 'button-group', 'attributeKey' => 'days'],
+            ['id' => 'b', 'type' => 'page-link', 'attributeKey' => 'more'],
+        ]);
+        $this->assertSame(['type' => 'array', 'default' => []], $attrs['days']);
+        $this->assertSame('object', $attrs['more']['type']);
+    }
+
     public function test_query_loop_default_is_seeded_from_config(): void {
         // The query config lives on the control (design-time); it must become the
         // attribute default so render.php receives the query without per-instance
